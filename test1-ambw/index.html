@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Fitnessy - Workout Anywhere (C14210004)</title>
+
+        <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./assets/css/styles.css">
+        <link rel="shortcut icon" href="./assets/images/favicon/favicon.ico" type="image/x-icon">
+        <link rel="manifest" href="./manifest.json">
+
+        <script src="./assets/js/jquery-3.7.1.min.js"></script>
+	</head>
+	<body>
+        <div id="section-content">
+            <div class="wrapper">
+                <div class="loader">
+                    <img src="./assets/images/icons/loader.svg" alt="Loader" />
+                </div>
+            </div>
+
+            <div class="navigation-bottom">
+                <div class="row">
+                    <div class="col-3 items">
+                        <a href="#home" data-menu="navbar" data-page="home" class="active">
+                            <img src="./assets/images/icons/active/house_light.svg" alt="Home" class="icon-home" /><br/>
+                            Home
+                        </a>
+                    </div>
+                    <div class="col-3 items">
+                        <a href="#workouts" data-menu="navbar" data-page="workouts">
+                            <img src="./assets/images/icons/primary/fire-flame-curved_light.svg" alt="Fire flame" class="icon-workout" /><br/>
+                            Workouts
+                        </a>
+                    </div>
+                    <div class="col-3 items">
+                        <a href="#profile" data-menu="navbar" data-page="profile">
+                            <img src="./assets/images/icons/primary/circle-user_light.svg" alt="Circle User" class="icon-profile" /><br/>
+                            Profile
+                        </a>
+                    </div>
+                    <div class="col-3 items">
+                        <a href="#settings" data-menu="navbar" data-page="settings">
+                            <img src="./assets/images/icons/primary/gear_light.svg" alt="Settings" class="icon-settings" /><br/>
+                            Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mode-offline">You are in offline mode.</div>
+        </div>
+
+        <div class="modal" id="modal-detail-workout">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title title-workout-section"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="content-workout-section"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="./assets/js/bootstrap.bundle.min.js"></script>
+		<script>
+			$(function() 
+            {
+                const mode_offline_alert = $(".mode-offline");
+                const wrapper = $(".wrapper");
+                const loader_html = `<div class="loader"><img src="./assets/images/icons/loader.svg" alt="Loader" /></div>`;
+                const navmenu = $("[data-menu=navbar]");
+                const uriFragment = window.location.hash;
+                const ambilHashUri = uriFragment.substring(1);
+
+                setInterval(function () {
+                    if (navigator.onLine) {
+                        mode_offline_alert.fadeOut();
+                    } else {
+                        mode_offline_alert.fadeIn();
+                    }
+                }, 500);
+
+				if ("serviceWorker" in navigator) 
+                {
+					navigator.serviceWorker
+						.register("./sw.js")
+						.then(function () {
+							console.log("Service worker registered!");
+						})
+						.catch(function (err) {
+							console.log(err);
+						});
+				}
+
+
+                const ajax_page = (page) => {
+                    wrapper.html(loader_html);
+
+                    setTimeout(function()
+                    {
+                        
+                        $.ajax({
+                            url: "./pages/" + page + ".html",
+                            timeout: 5000,
+                            success: function (output) {
+                                wrapper.html(output);
+                            },
+                            error: () => ajax_page("mode_offline"),
+                        });
+                    }, 300);
+                };
+
+
+                const load_page = (page) => {
+                    const pageData = {
+                        home: {
+                            icon: {
+                                ".icon-home": "active/house_light.svg",
+                                ".icon-workout": "primary/fire-flame-curved_light.svg",
+                                ".icon-profile": "primary/circle-user_light.svg",
+                                ".icon-settings": "primary/gear_light.svg",
+                            },
+                            activePage: "home",
+                        },
+                        workouts: {
+                            icon: {
+                                ".icon-home": "primary/house_light.svg",
+                                ".icon-workout": "active/fire-flame-curved_light.svg",
+                                ".icon-profile": "primary/circle-user_light.svg",
+                                ".icon-settings": "primary/gear_light.svg",
+                            },
+                            activePage: "workouts",
+                        },
+                        profile: {
+                            icon: {
+                                ".icon-home": "primary/house_light.svg",
+                                ".icon-workout": "primary/fire-flame-curved_light.svg",
+                                ".icon-profile": "active/circle-user_light.svg",
+                                ".icon-settings": "primary/gear_light.svg",
+                            },
+                            activePage: "profile",
+                        },
+                        settings: {
+                            icon: {
+                                ".icon-home": "primary/house_light.svg",
+                                ".icon-workout": "primary/fire-flame-curved_light.svg",
+                                ".icon-profile": "primary/circle-user_light.svg",
+                                ".icon-settings": "active/gear_light.svg",
+                            },
+                            activePage: "settings",
+                        },
+                    };
+
+                    const pageConfig = pageData[page];
+
+                    if (!pageConfig) ajax_page("mode_offline");
+                    else {
+                        const { icon, activePage } = pageConfig;
+
+                        ajax_page(page);
+
+                        Object.entries(icon).forEach(([selector, imageUrl]) => {
+                            $(selector).attr("src", "./assets/images/icons/" + imageUrl);
+                        });
+
+                        $("[data-page]").removeClass("active");
+                        $(`[data-page=${activePage}]`).addClass("active");
+                    }
+                };
+
+
+                navmenu.click(function () {
+                    const get_halaman = $(this).attr("data-page");
+                    load_page(get_halaman);
+                });
+
+                load_page(ambilHashUri === "" ? "home" : ambilHashUri);
+			});
+		</script>
+	</body>
+</html>
