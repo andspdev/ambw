@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `workout_excercies` (
     `nama_workout` varchar(100) NOT NULL,
     `thumbnail` varchar(40) NOT NULL,
     `menit` int unsigned NOT NULL,
+    `deskripsi` text NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`workout_id`)
         REFERENCES `workouts` (`id`)
