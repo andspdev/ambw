@@ -11,4 +11,4 @@ Backend
 - Import tables.sql
 
 Demo PWA
-- https://ambw.andsp.id/test-1
+- https://ambw.andsp.id/test-1/
