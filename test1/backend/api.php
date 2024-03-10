@@ -31,7 +31,7 @@ switch($act)
                 'nama' => $data->nama_workout,
                 'total_excercies' => $data->total_excerices,
                 'total_menit' => $data->minutes,
-                'images' => './assets/images/workouts/'.strtolower($data->nama_workout).'/'.$data->thumbnail
+                'images' => './assets/images/workouts/'.str_replace(' ',  '-', strtolower($data->nama_workout)).'/'.$data->thumbnail
             ];
         }
 
@@ -58,7 +58,7 @@ switch($act)
         $workouts->execute([ $id ]);
         $workouts = $workouts->fetch(PDO::FETCH_OBJ);
 
-        $query = "SELECT we.id, wk.nama_workout, we.nama_workout workout, we.thumbnail, we.menit FROM `workout_excercies` we INNER JOIN workouts wk ON workout_id = wk.id WHERE workout_id = ?";
+        $query = "SELECT we.id, wk.nama_workout, we.nama_workout workout, we.thumbnail, we.menit, we.deskripsi FROM `workout_excercies` we INNER JOIN workouts wk ON workout_id = wk.id WHERE workout_id = ?";
         $query = $pdo->prepare($query);
         $query->execute([ $id ]);
 
@@ -67,9 +67,9 @@ switch($act)
             $arr[] = [
                 'id' =>  $data->id,
                 'nama' => $data->workout,
-                'thumbnail' =>  './assets/images/workouts/'.strtolower($data->nama_workout).'/'.$data->thumbnail,
+                'thumbnail' =>  './assets/images/workouts/'.str_replace(' ', '-', strtolower($data->nama_workout)).'/'.$data->thumbnail,
                 'menit' => $data->menit,
-                'deskripsi' => ''
+                'deskripsi' => $data->deskripsi
             ];
 
         echo json_encode([
