@@ -6,3 +6,8 @@ Workouts:
 - https://yogarove.com/full-body-yoga-workout/
 - https://www.mensjournal.com/health-fitness/the-best-pilates-workouts-to-level-up-your-winter-sports-game
 - https://www.realsimple.com/full-body-workout-exercises-7488066
+
+
+-- Backend
+connect.php -> MySQL
+Import tables.sql
