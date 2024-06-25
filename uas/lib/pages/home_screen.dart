@@ -49,7 +49,9 @@ class _HomeScreen extends State<HomeScreen>
             backgroundColor: backgroundColor,
             elevation: 0,
             actions: <Widget>[
-                IconButton(
+                Padding(
+                  padding: const EdgeInsets.only(right: 9, top: 2),
+                  child: IconButton(
                   icon: const Icon(Icons.key_outlined),
                   color: textBlackAppBar,
                   tooltip: "Pengaturan PIN",
@@ -57,17 +59,6 @@ class _HomeScreen extends State<HomeScreen>
                   {
 
                   }
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8, top: 2),
-                  child: IconButton(
-                  icon: const Icon(Icons.search),
-                  color: textBlackAppBar,
-                  tooltip: "Pencarian",
-                  onPressed: () 
-                  {
-
-                  },
                 ),
               )
             ],
