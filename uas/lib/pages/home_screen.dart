@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uas/constant/assets.dart';
 import 'package:uas/constant/colors.dart';
+import 'package:uas/pages/add_notes.dart';
 
 class HomeScreen extends StatefulWidget 
 {
@@ -80,7 +81,10 @@ class _HomeScreen extends State<HomeScreen>
       floatingActionButton: FloatingActionButton(  
         onPressed: () 
         {
-          print('Floating button pressed!');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddNotes())
+          );
         },
         backgroundColor: primaryColor,
         child: const Icon(
