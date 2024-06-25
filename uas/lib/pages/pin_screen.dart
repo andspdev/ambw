@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:uas/constant/colors.dart';
 import 'package:uas/pages/home_screen.dart';
 
@@ -130,6 +131,7 @@ class _PinScreen extends State<PinScreen>
               _onChanged(value, focusNode, nextFocusNode);
             }
           },
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         ),
       )
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:uas/constant/alert_color.dart';
 import 'package:uas/constant/styles.dart';
 import 'package:uas/constant/colors.dart';
@@ -153,6 +154,8 @@ class _PinSetting extends State<PinSetting>
                   ),
                   maxLength: 4,
                   keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  obscureText: true,
                 ),
 
                 const SizedBox(height: 15,),
@@ -179,6 +182,8 @@ class _PinSetting extends State<PinSetting>
                   ),
                   maxLength: 4,
                   keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  obscureText: true,
                 )
               ],
             )
