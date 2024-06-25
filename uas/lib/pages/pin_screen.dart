@@ -108,7 +108,7 @@ class _PinScreen extends State<PinScreen>
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius:  BorderRadius.circular(12.0),
-              borderSide: const BorderSide(color: primaryColor, width: 1.5)
+              borderSide: const BorderSide(color: primaryColor, width: 1)
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius:  BorderRadius.circular(12.0),
@@ -123,7 +123,8 @@ class _PinScreen extends State<PinScreen>
             if (isLast) 
             {
               _onLastChanged(context, value);
-            } else {
+            } else if (value.length == 1) 
+            {
               _onChanged(value, focusNode, nextFocusNode);
             }
           },
