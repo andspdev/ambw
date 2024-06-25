@@ -40,6 +40,7 @@ class _HomeScreen extends State<HomeScreen>
             ],
           ),
           child: AppBar(
+            surfaceTintColor: backgroundColor,
             title: const Text('NotesTaking', style: TextStyle(
               fontSize: fontSizeAppBar,
               fontWeight: FontWeight.bold,
@@ -88,7 +89,7 @@ class _HomeScreen extends State<HomeScreen>
           );
         },
         backgroundColor: primaryColor,
-        tooltip: "Add Note",
+        tooltip: "Tambah Catatan",
         child: const Icon(
           Icons.add, 
           color: whiteColor

@@ -6,5 +6,7 @@ const Color primaryColor = Color.fromRGBO(6, 99, 220, 1);
 const Color borderGrey = Color.fromRGBO(238, 238, 238, 1);
 const Color textBlack = Color.fromRGBO(34, 34, 34, 1);
 const Color textBlackNotesNotFound = Color.fromRGBO(80, 80, 80, 1);
-const Color textBlackAppBar = Color.fromRGBO(60, 60, 60, 1);
+const Color textBlackAppBar = Color.fromRGBO(103, 103, 103, 1);
+const Color textBlackSmooth = Color.fromRGBO(150, 150, 150, 1);
+
 const Color smoothGrey = Color.fromRGBO(238, 238, 238, 1);

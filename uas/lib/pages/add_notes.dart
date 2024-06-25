@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:uas/constant/styles.dart';
 import 'package:uas/constant/colors.dart';
 
@@ -15,6 +16,10 @@ class _AddNotes extends State<AddNotes>
   @override
   Widget build(BuildContext context)
   {
+    DateTime now = DateTime.now();
+    String formattedDateTime = DateFormat('d MMMM yyyy HH:mm').format(now);
+
+
     return Scaffold(
     backgroundColor: backgroundColor,
     appBar: PreferredSize(
@@ -38,21 +43,136 @@ class _AddNotes extends State<AddNotes>
           ],
         ),
         child: AppBar(
-          title: const Text('Add Notes', style: TextStyle(
+          backgroundColor: backgroundColor,
+          surfaceTintColor: backgroundColor,
+          title: const Text('Tambah Catatan', style: TextStyle(
             fontSize: fontSizeAppBar,
             fontWeight: FontWeight.bold,
             color: textBlack
-          ),),
-          backgroundColor: backgroundColor,
+          )),
           elevation: 0,
         ),
       ),
     ),
     
     body: Container(
-        padding: const EdgeInsets.all(paddingContainer),
-        child: null
+        padding: const EdgeInsets.only(top: paddingContainer),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>
+          [
+            const SizedBox(height: 10),
+
+            TextFormField(
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.all(paddingContainer),
+                labelText:  "Judul",
+                labelStyle: TextStyle(
+                  color: textBlackSmooth,
+                  fontSize: 18
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                    width: 0
+                  )
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                    width: 0,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                    width: 0,
+                  ),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                    width: 0,
+                  ),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                    width: 0,
+                  ),
+                ),
+              ),
+              cursorColor: primaryColor,
+            ),
+
+            const SizedBox(height: 10),
+
+            Padding(
+              padding: const EdgeInsets.all(paddingContainer),
+              child: Text(
+                formattedDateTime,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: textBlack
+                ),
+              ),
+            ),
+            
+
+            const SizedBox(height: 15),
+
+            Expanded(
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.only(top: 15, left: paddingContainer, right: paddingContainer, bottom: paddingContainer),
+                  labelText:  "Deskripsi",
+                  labelStyle: TextStyle(
+                    color: textBlackSmooth,
+                    fontSize: 18
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 0
+                    )
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 0,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 0,
+                    ),
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 0,
+                    ),
+                  ),
+                ),
+                maxLines: null,
+                cursorColor: primaryColor,
+              )
+            ),
+
+
+
+          ],
+        )
       ),
+
+
       floatingActionButton: FloatingActionButton(  
         onPressed: () 
         {
@@ -62,7 +182,7 @@ class _AddNotes extends State<AddNotes>
           );
         },
         backgroundColor: primaryColor,
-        tooltip: "Save Note",
+        tooltip: "Simpan Catatan",
         child: const Icon(
           Icons.save_as_outlined, 
           color: whiteColor
