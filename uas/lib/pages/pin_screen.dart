@@ -103,6 +103,7 @@ class _PinScreen extends State<PinScreen>
           focusNode: focusNode,
           autofocus: true,
           decoration: InputDecoration(
+            counterText: "",
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -118,6 +119,7 @@ class _PinScreen extends State<PinScreen>
           textAlign: TextAlign.center,
           keyboardType: TextInputType.number,
           cursorColor: primaryColor,
+          maxLength: 1,
           onChanged: (value) 
           {
             if (isLast) 
