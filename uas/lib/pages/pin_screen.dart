@@ -69,7 +69,8 @@ class _PinScreen extends State<PinScreen>
           children: <Widget>
           [
             const Text('ENTER YOUR A PIN', style: TextStyle(
-              color:  textBlack
+              color:  textBlack,
+              fontWeight: FontWeight.bold
             )),
             
             const SizedBox(height: 15),
