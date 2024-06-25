@@ -3,6 +3,7 @@ import 'package:uas/constant/styles.dart';
 import 'package:uas/constant/assets.dart';
 import 'package:uas/constant/colors.dart';
 import 'package:uas/pages/add_notes.dart';
+import 'package:uas/pages/pin_setting.dart';
 
 class HomeScreen extends StatefulWidget 
 {
@@ -57,7 +58,10 @@ class _HomeScreen extends State<HomeScreen>
                   tooltip: "Pengaturan PIN",
                   onPressed: () 
                   {
-
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const PinSetting())
+                    );
                   }
                 ),
               )
