@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uas/constant/styles.dart';
 import 'package:uas/constant/assets.dart';
 import 'package:uas/constant/colors.dart';
 import 'package:uas/pages/add_notes.dart';
@@ -19,7 +20,7 @@ class _HomeScreen extends State<HomeScreen>
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(heightAppBar),
         child: Container(
           decoration: const BoxDecoration(
             color: backgroundColor,
@@ -40,7 +41,7 @@ class _HomeScreen extends State<HomeScreen>
           ),
           child: AppBar(
             title: const Text('NotesTaking', style: TextStyle(
-              fontSize: 18,
+              fontSize: fontSizeAppBar,
               fontWeight: FontWeight.bold,
               color: textBlack
             ),),
@@ -74,7 +75,7 @@ class _HomeScreen extends State<HomeScreen>
       ),
       
       body: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(paddingContainer),
         child: notesNotFound()
       ),
 
@@ -87,6 +88,7 @@ class _HomeScreen extends State<HomeScreen>
           );
         },
         backgroundColor: primaryColor,
+        tooltip: "Add Note",
         child: const Icon(
           Icons.add, 
           color: whiteColor
