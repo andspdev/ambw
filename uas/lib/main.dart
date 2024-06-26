@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:uas/constant/debug_status.dart';
+import 'package:uas/includes/register_adapter_hive.dart';
 import 'package:uas/pages/splash_screen.dart';
 
-void main() {
+void main() async 
+{
+  // Register adapter (Hive)
+  registerAdapterHive();
   runApp(const MainApp());
 }
 
