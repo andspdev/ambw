@@ -6,6 +6,7 @@ import 'package:uas/constant/alert_color.dart';
 import 'package:uas/constant/styles.dart';
 import 'package:uas/constant/colors.dart';
 import 'package:uas/includes/functions.dart';
+import 'package:uas/layouts/loader_small_center.dart';
 import 'package:uas/model/pin_model.dart';
 
 class PinSetting extends StatefulWidget 
@@ -23,7 +24,9 @@ class _PinSetting extends State<PinSetting>
   final pinLamaController = TextEditingController();
 
   late Box<Pin> pinSaved;
-  bool isShowFormPin = true;
+
+  bool isLoadinghive = true;
+  bool isShowFormPinBaru = true;
 
 
   @override
@@ -49,7 +52,8 @@ class _PinSetting extends State<PinSetting>
     Pin? checkPinSaved = await getPinModel(pinSaved);
 
     setState(() {
-      isShowFormPin = (checkPinSaved == null);
+      isShowFormPinBaru = (checkPinSaved == null);
+      isLoadinghive = false;
     });
 
     pinSaved.close();
@@ -63,7 +67,6 @@ class _PinSetting extends State<PinSetting>
     String valuePinLama = pinLamaController.value.text;
     String valuePinBaru = pinBaruController.value.text;
     String valueKonfirmasiPinBaru = konfirmasiPinBaruController.value.text;
-
 
     if (checkPinSaved != null && valuePinLama != checkPinSaved.pin.toString())
     {
@@ -85,13 +88,14 @@ class _PinSetting extends State<PinSetting>
     {
       int? valuePinBaruInt = int.tryParse(valuePinBaru);
       Pin pinModelSaved = Pin( pin: valuePinBaruInt );
+
       savePinModel(pinSaved, pinModelSaved);
+      setStateFormPin();
 
       snackbarMessage(context, 
         checkPinSaved == null ? 
           'Berhasil menyimpan PIN baru Anda.' : 'Berhasil menyimpan PIN Anda.'
       );
-
 
       pinLamaController.clear();
       pinBaruController.clear();
@@ -100,6 +104,49 @@ class _PinSetting extends State<PinSetting>
 
     pinSaved.close();
   }
+
+
+  Future<void> hapusPinHive(BuildContext context) async
+  {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) 
+      {
+        return AlertDialog(
+          title: const Text('Hapus PIN Anda'),
+          backgroundColor: backgroundColor,
+          surfaceTintColor: backgroundColor,
+          content: const Text('Apakah Anda ingin menghapus PIN Anda?'),
+          actions: <Widget>[
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(primaryColor), 
+                surfaceTintColor: MaterialStateProperty.all<Color>(backgroundColor),
+                backgroundColor: MaterialStateProperty.all<Color>(backgroundColor)
+              ),
+              child: const Text('Tidak'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(primaryColor),
+                surfaceTintColor: MaterialStateProperty.all<Color>(backgroundColor),
+                backgroundColor: MaterialStateProperty.all<Color>(backgroundColor)
+              ),
+              child: const Text('Ya'),
+              onPressed: () 
+              {
+                
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
+
 
   @override
   Widget build(BuildContext context)
@@ -135,14 +182,23 @@ class _PinSetting extends State<PinSetting>
             color: textBlack
           )),
           elevation: 0,
+          actions: !isShowFormPinBaru ? [
+            Padding(
+              padding: const EdgeInsets.only(right: 9, top: 2),
+              child: IconButton(
+                onPressed: () => hapusPinHive(context), 
+                icon: const Icon(Icons.delete_outline, color: textBlackAppBar),
+                tooltip: "Hapus PIN",
+              ),
+            )
+          ] : null,
         ),
       ),
     ),
     
     body: Container(
         padding: const EdgeInsets.all(paddingContainer),
-
-        child: formPengaturanPin(pengaturanPinBaru: isShowFormPin)
+        child: isLoadinghive ? loaderSmallCenter() : formPengaturanPin(pengaturanPinBaru: isShowFormPinBaru),
 
       ),
       floatingActionButton: FloatingActionButton(  
