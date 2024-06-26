@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:uas/adapter/pin_adapter/pin.dart';
 import 'package:uas/constant/colors.dart';
+import 'package:uas/model/pin_model.dart';
+import 'package:uas/pages/home_screen.dart';
 import 'package:uas/pages/pin_screen.dart';
 
 class SplashScreen extends StatefulWidget 
@@ -13,16 +17,31 @@ class SplashScreen extends StatefulWidget
 
 class _SplashScreen extends State<SplashScreen>
 {
+  late Box<Pin> pinSaved;
+
   @override
   void initState()
   {
     super.initState();
 
+    Future.delayed(const Duration(seconds: 1), () async 
+    {
+      pinSaved = await openPinModel();
+      Pin? getPinSaved = await getPinModel(pinSaved);
 
-    Timer(const Duration(seconds: 3), () => Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const PinScreen())
-    ));
+      dynamic materialPageRoute = const HomeScreen();
+      if (getPinSaved != null)
+      {
+        materialPageRoute = const PinScreen();
+        
+      }
+
+      Timer(const Duration(seconds: 2), () => 
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => materialPageRoute)
+      ));
+
+      pinSaved.close();
+    });
   }
 
   @override

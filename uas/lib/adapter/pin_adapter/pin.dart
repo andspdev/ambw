@@ -6,17 +6,9 @@ part 'pin.g.dart';
 class Pin
 {
   @HiveField(0)
-  final int pin;
-
-  @HiveField(1)
-  final DateTime createdAt;
-
-  @HiveField(2)
-  final DateTime updatedAt;
+  final int? pin;
 
   Pin({
-    required this.pin,
-    required this.createdAt,
-    required this.updatedAt
+    required this.pin
   });
 }

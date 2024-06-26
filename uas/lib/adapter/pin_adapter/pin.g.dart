@@ -17,22 +17,16 @@ class PinAdapter extends TypeAdapter<Pin> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Pin(
-      pin: fields[0] as int,
-      createdAt: fields[1] as DateTime,
-      updatedAt: fields[2] as DateTime,
+      pin: fields[0] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Pin obj) {
     writer
-      ..writeByte(3)
-      ..writeByte(0)
-      ..write(obj.pin)
       ..writeByte(1)
-      ..write(obj.createdAt)
-      ..writeByte(2)
-      ..write(obj.updatedAt);
+      ..writeByte(0)
+      ..write(obj.pin);
   }
 
   @override

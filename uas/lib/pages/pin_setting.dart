@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:uas/adapter/pin_adapter/pin.dart';
 import 'package:uas/constant/alert_color.dart';
 import 'package:uas/constant/styles.dart';
 import 'package:uas/constant/colors.dart';
+import 'package:uas/includes/functions.dart';
+import 'package:uas/model/pin_model.dart';
 
 class PinSetting extends StatefulWidget 
 {
@@ -18,6 +22,9 @@ class _PinSetting extends State<PinSetting>
   final konfirmasiPinBaruController = TextEditingController();
   final pinLamaController = TextEditingController();
 
+  late Box<Pin> pinSaved;
+  bool isShowFormPin = true;
+
 
   @override
   void dispose()
@@ -27,6 +34,71 @@ class _PinSetting extends State<PinSetting>
     pinBaruController.dispose();
     konfirmasiPinBaruController.dispose();
     pinLamaController.dispose();
+  }
+
+  @override
+  void initState()
+  {
+    super.initState();
+    setStateFormPin();
+  }
+
+  Future<void> setStateFormPin() async
+  {
+    pinSaved = await openPinModel();
+    Pin? checkPinSaved = await getPinModel(pinSaved);
+
+    setState(() {
+      isShowFormPin = (checkPinSaved == null);
+    });
+
+    pinSaved.close();
+  }
+
+  Future<void> saveSubmitPin(BuildContext context) async
+  {
+    pinSaved = await openPinModel();
+    Pin? checkPinSaved = await getPinModel(pinSaved);
+
+    String valuePinLama = pinLamaController.value.text;
+    String valuePinBaru = pinBaruController.value.text;
+    String valueKonfirmasiPinBaru = konfirmasiPinBaruController.value.text;
+
+
+    if (checkPinSaved != null && valuePinLama != checkPinSaved.pin.toString())
+    {
+      snackbarMessage(context, 'PIN lama yang diketik salah.');
+    }
+    else if (valuePinBaru.isEmpty)
+    {
+      snackbarMessage(context, 'Silakan ketik PIN baru.');
+    }
+    else if (!RegExp(r'^\d{4}$').hasMatch(valuePinBaru))
+    {
+      snackbarMessage(context, 'Isi PIN baru dengan angka.');
+    }
+    else if (valueKonfirmasiPinBaru != valuePinBaru)
+    {
+      snackbarMessage(context, 'Konfirmasi PIN baru tidak sama.');
+    }
+    else
+    {
+      int? valuePinBaruInt = int.tryParse(valuePinBaru);
+      Pin pinModelSaved = Pin( pin: valuePinBaruInt );
+      savePinModel(pinSaved, pinModelSaved);
+
+      snackbarMessage(context, 
+        checkPinSaved == null ? 
+          'Berhasil menyimpan PIN baru Anda.' : 'Berhasil menyimpan PIN Anda.'
+      );
+
+
+      pinLamaController.clear();
+      pinBaruController.clear();
+      konfirmasiPinBaruController.clear();
+    }
+
+    pinSaved.close();
   }
 
   @override
@@ -69,17 +141,12 @@ class _PinSetting extends State<PinSetting>
     
     body: Container(
         padding: const EdgeInsets.all(paddingContainer),
-        child: formPengaturanPin(pengaturanPinBaru: false)
+
+        child: formPengaturanPin(pengaturanPinBaru: isShowFormPin)
+
       ),
       floatingActionButton: FloatingActionButton(  
-        onPressed: () 
-        {
-          Navigator.pop(context);
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Berhasil menyimpan PIN Anda.'))
-          );
-        },
+        onPressed: () => saveSubmitPin(context),
         backgroundColor: primaryColor,
         tooltip: "Simpan Perubahan",
         child: const Icon(
@@ -120,7 +187,7 @@ class _PinSetting extends State<PinSetting>
     );
   }
 
-  Widget formPengaturanPin({bool pengaturanPinBaru = true})
+  Widget formPengaturanPin({bool pengaturanPinBaru = false})
   {
     if (pengaturanPinBaru)
     {
@@ -161,11 +228,11 @@ class _PinSetting extends State<PinSetting>
 
         const SizedBox(height: 15),
 
-        _textFormField(pinBaruController, "Masukkan PIN Lama"),
+        _textFormField(pinLamaController, "Masukkan PIN Lama"),
 
         const SizedBox(height: 15,),
 
-        _textFormField(konfirmasiPinBaruController, "Masukkan PIN Baru"),
+        _textFormField(pinBaruController, "Masukkan PIN Baru"),
 
         const SizedBox(height: 15,),
 
