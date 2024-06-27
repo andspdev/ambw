@@ -17,3 +17,8 @@ Future<Pin?> getPinModel(Box<Pin> pinSaved) async
 {
   return pinSaved.get('pinSaved');
 }
+
+Future<void> deletePinModel(Box<Pin> pinSaved) async 
+{
+  await pinSaved.delete('pinSaved');
+}

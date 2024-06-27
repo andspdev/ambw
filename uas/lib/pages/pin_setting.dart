@@ -19,11 +19,10 @@ class PinSetting extends StatefulWidget
 
 class _PinSetting extends State<PinSetting>
 {
+  late final Box<Pin> pinSaved;
   final pinBaruController = TextEditingController();
   final konfirmasiPinBaruController = TextEditingController();
   final pinLamaController = TextEditingController();
-
-  late Box<Pin> pinSaved;
 
   bool isLoadinghive = true;
   bool isShowFormPinBaru = true;
@@ -90,7 +89,7 @@ class _PinSetting extends State<PinSetting>
       Pin pinModelSaved = Pin( pin: valuePinBaruInt );
 
       savePinModel(pinSaved, pinModelSaved);
-      setStateFormPin();
+      setState(() { isShowFormPinBaru = false; });
 
       snackbarMessage(context, 
         checkPinSaved == null ? 
@@ -106,7 +105,7 @@ class _PinSetting extends State<PinSetting>
   }
 
 
-  Future<void> hapusPinHive(BuildContext context) async
+  Future<void> hapusPinHiveDialog(BuildContext context) async
   {
     showDialog(
       context: context,
@@ -136,9 +135,15 @@ class _PinSetting extends State<PinSetting>
                 backgroundColor: MaterialStateProperty.all<Color>(backgroundColor)
               ),
               child: const Text('Ya'),
-              onPressed: () 
+              onPressed: () async 
               {
-                
+                pinSaved = await openPinModel();
+                deletePinModel(pinSaved);
+                pinSaved.close();
+
+                setState(() { isShowFormPinBaru = true; });
+                Navigator.of(context).pop();
+                snackbarMessage(context, 'Berhasil menghapus PIN Anda.');
               },
             ),
           ],
@@ -186,7 +191,7 @@ class _PinSetting extends State<PinSetting>
             Padding(
               padding: const EdgeInsets.only(right: 9, top: 2),
               child: IconButton(
-                onPressed: () => hapusPinHive(context), 
+                onPressed: () => hapusPinHiveDialog(context), 
                 icon: const Icon(Icons.delete_outline, color: textBlackAppBar),
                 tooltip: "Hapus PIN",
               ),
