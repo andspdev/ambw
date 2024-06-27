@@ -19,7 +19,7 @@ class PinSetting extends StatefulWidget
 
 class _PinSetting extends State<PinSetting>
 {
-  late final Box<Pin> pinSaved;
+  late Box<Pin> pinSaved;
   final pinBaruController = TextEditingController();
   final konfirmasiPinBaruController = TextEditingController();
   final pinLamaController = TextEditingController();
