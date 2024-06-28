@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:uas/adapter/pin_adapter/pin.dart';
 import 'package:uas/constant/colors.dart';
+import 'package:uas/includes/functions.dart';
+import 'package:uas/model/pin_model.dart';
 import 'package:uas/pages/home_screen.dart';
 
 class PinScreen extends StatefulWidget 
@@ -13,6 +17,7 @@ class PinScreen extends StatefulWidget
 
 class _PinScreen extends State<PinScreen>
 {
+  late Box<Pin> pinSaved;
   final _pinController1 = TextEditingController();
   final _pinController2 = TextEditingController();
   final _pinController3 = TextEditingController();
@@ -23,6 +28,12 @@ class _PinScreen extends State<PinScreen>
   final FocusNode _focusNode3 = FocusNode();
   final FocusNode _focusNode4 = FocusNode();
 
+  bool isEnabledPin1 = true;
+  bool isEnabledPin2 = false;
+  bool isEnabledPin3 = false;
+  bool isEnabledPin4 = false;
+
+
   @override
   void dispose()
   {
@@ -32,29 +43,86 @@ class _PinScreen extends State<PinScreen>
     _pinController2.dispose();
     _pinController3.dispose();
     _pinController4.dispose();
+
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+    _focusNode4.dispose();
   }
 
   void _onChanged(String value, FocusNode currentNode, FocusNode nextNode) 
   {
-    if (value.length == 1) {
-      currentNode.unfocus();
-      FocusScope.of(context).requestFocus(nextNode);
+    String valPin1 = _pinController1.value.text;
+    String valPin2 = _pinController2.value.text;
+    String valPin3 = _pinController3.value.text;
+
+    if (valPin1.isNotEmpty && valPin1.length == 1)
+    {
+      setState(() {
+        isEnabledPin1 = false;
+        isEnabledPin2 = true;
+      });
+    }
+
+    if (valPin2.isNotEmpty && valPin2.length == 1)
+    {
+      setState(() {
+        isEnabledPin2 = false;
+        isEnabledPin3 = true;
+      });
+    }
+
+    if (valPin3.isNotEmpty && valPin3.length == 1)
+    {
+      setState(() {
+        isEnabledPin3 = false;
+        isEnabledPin4 = true;
+      });
     }
   }
 
-  void _onLastChanged(BuildContext context, value) 
+  Future<void> _onLastChanged(BuildContext context, value) async 
   {
     if (value.length == 1 &&
-        _pinController1.text.isNotEmpty &&
-        _pinController2.text.isNotEmpty &&
-        _pinController3.text.isNotEmpty &&
-        _pinController4.text.isNotEmpty) 
-      {
+      _pinController1.text.isNotEmpty &&
+      _pinController2.text.isNotEmpty &&
+      _pinController3.text.isNotEmpty &&
+      _pinController4.text.isNotEmpty) 
+    {
+      String valPin1 = _pinController1.value.text;
+      String valPin2 = _pinController2.value.text;
+      String valPin3 = _pinController3.value.text;
+      String valPin4 = value;
+      String allConcate = "$valPin1$valPin2$valPin3$valPin4";
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      pinSaved = await openPinModel();
+      Pin? fetchPin = await getPinModel(pinSaved);
+
+      if (fetchPin?.pin != int.tryParse(allConcate))
+      {
+        _pinController1.clear();
+        _pinController2.clear();
+        _pinController3.clear();
+        _pinController4.clear();
+
+        setState(() {
+          isEnabledPin1 = true;
+          isEnabledPin2 = false;
+          isEnabledPin3 = false;
+          isEnabledPin4 = false;
+        });
+
+        snackbarMessage(context, 'PIN yang Anda masukkan salah.');
+      }
+      else
+      {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      }
+
+      pinSaved.close();
     }
   }
 
@@ -78,10 +146,10 @@ class _PinScreen extends State<PinScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _textPinField(_pinController1, _focusNode1, _focusNode2),
-                _textPinField(_pinController2, _focusNode2, _focusNode3),
-                _textPinField(_pinController3, _focusNode3, _focusNode4),
-                _textPinField(_pinController4, _focusNode4, _focusNode4, isLast: true),
+                _textPinField(_pinController1, _focusNode1, _focusNode2, isEnabledPin1),
+                _textPinField(_pinController2, _focusNode2, _focusNode3, isEnabledPin2),
+                _textPinField(_pinController3, _focusNode3, _focusNode4, isEnabledPin3),
+                _textPinField(_pinController4, _focusNode4, _focusNode4, isEnabledPin4, isLast: true),
               ],
             ),
           ],
@@ -94,6 +162,7 @@ class _PinScreen extends State<PinScreen>
     TextEditingController controller, 
     FocusNode focusNode, 
     FocusNode nextFocusNode, 
+    bool isEnabled,
     {bool isLast = false})
   {
     return Padding(
@@ -122,6 +191,8 @@ class _PinScreen extends State<PinScreen>
           keyboardType: TextInputType.number,
           cursorColor: primaryColor,
           maxLength: 1,
+          enabled: isEnabled,
+          obscureText: true,
           onChanged: (value) 
           {
             if (isLast) 
