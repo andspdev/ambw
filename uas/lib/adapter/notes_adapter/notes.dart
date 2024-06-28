@@ -12,10 +12,10 @@ class Notes
   final String deskripsi;
 
   @HiveField(2)
-  final String createdAt;
+  final DateTime createdAt;
 
   @HiveField(3)
-  final String updatedAt;
+  final DateTime updatedAt;
 
   Notes({
     required this.judul,

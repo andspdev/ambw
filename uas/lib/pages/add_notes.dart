@@ -26,7 +26,6 @@ class _AddNotes extends State<AddNotes>
   Widget build(BuildContext context)
   {
     DateTime now = DateTime.now();
-    String formattedDateTime = DateFormat('d MMMM yyyy HH:mm').format(now);
 
 
     Future<void> tambahNote(BuildContext context) async
@@ -44,16 +43,14 @@ class _AddNotes extends State<AddNotes>
         Notes notesAdd = Notes(
           judul: valJudul, 
           deskripsi: valDeskripsi, 
-          createdAt: formattedDateTime, 
-          updatedAt: formattedDateTime
+          createdAt: now, 
+          updatedAt: now
         );
 
         addNotesModel(notesBox, notesAdd);
-
+        deskripsiController.clear();
         snackbarMessage(context, 'Berhasil menambahkan catatan Anda.');
       }
-
-      notesBox.close();
     }
 
 
@@ -148,7 +145,7 @@ class _AddNotes extends State<AddNotes>
             Padding(
               padding: const EdgeInsets.all(paddingContainer),
               child: Text(
-                formattedDateTime,
+                DateFormat('d MMMM yyyy HH:mm').format(now),
                 style: const TextStyle(
                   fontSize: 12,
                   color: textBlack

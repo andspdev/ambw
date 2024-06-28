@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:uas/adapter/notes_adapter/notes.dart';
 import 'package:uas/constant/styles.dart';
 import 'package:uas/constant/assets.dart';
 import 'package:uas/constant/colors.dart';
+import 'package:uas/layouts/loader_small_center.dart';
+import 'package:uas/model/notes_model.dart';
 import 'package:uas/pages/add_notes.dart';
 import 'package:uas/pages/pin_setting.dart';
 
@@ -15,6 +21,26 @@ class HomeScreen extends StatefulWidget
 
 class _HomeScreen extends State<HomeScreen>
 {
+  late Box<Notes> notesBox;
+  bool isLoadDataHive = true;
+
+  @override
+  void initState() 
+  {
+    super.initState();
+    loadDataNotesHive();
+  }
+
+  Future<void> loadDataNotesHive() async
+  {
+    notesBox = await openNotesModel();
+
+    setState(() {
+      isLoadDataHive = false;
+    });
+    // notesBox.clear();
+  }
+
   @override
   Widget build(BuildContext context)
   {
@@ -71,8 +97,107 @@ class _HomeScreen extends State<HomeScreen>
       ),
       
       body: Container(
-        padding: const EdgeInsets.all(paddingContainer),
-        child: notesNotFound()
+        child: isLoadDataHive ? 
+        Padding(
+          padding: const EdgeInsets.all(paddingContainer),
+          child: loaderSmallCenter(),
+        ) : 
+        
+        Container(
+          padding: const EdgeInsets.only(bottom: paddingContainer),
+          child: ValueListenableBuilder(
+            valueListenable: notesBox!.listenable(),
+            builder: (context, Box box, widget)
+            {
+              if (box.isEmpty)
+              {
+                return notesNotFound();
+              }
+
+              final notes = box.values.toList().cast<Notes>();
+              notes.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+
+              return ListView.builder(
+                itemCount: box.length,
+                itemBuilder: ((context, index) 
+                {
+                  Notes? note = box.getAt(index);
+
+                  return 
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: (index == 0 ? paddingContainer : 0),
+                      left: paddingContainer, 
+                      right: paddingContainer,
+                      bottom: (index + 1 == box.length ? 70 : 0 )
+                    ),
+                    child: Card(
+                      color: backgroundColor,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(
+                          color: borderCardNotes, 
+                          width: 1
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      surfaceTintColor: backgroundColor,
+                      margin: const EdgeInsets.all(8.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            
+                            Text(
+                              note!.judul.isEmpty ? '(Tidak ada judul)' : note.judul,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: note.judul.isEmpty ? textBlackSmooth : textBlack,
+                                fontWeight: note.judul.isEmpty ? FontWeight.normal : FontWeight.bold,
+                                fontStyle: note.judul.isEmpty ? FontStyle.italic : FontStyle.normal
+                              ),
+                            ),
+                            
+                            const SizedBox(height: 8),
+                            
+                            Text(
+                              note.deskripsi, 
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            
+                            const SizedBox(height: 16),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  DateFormat('d MMMM yyyy HH:mm').format(note.updatedAt),
+                                  style: const TextStyle(
+                                    color: textBlackSmooth,
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 12
+                                  ),
+                                ),
+
+                                IconButton(
+                                  icon: const Icon(Icons.arrow_circle_right_outlined),
+                                  color: textBlackAppBar,
+                                  onPressed: () => {}
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    )
+                  );
+                })
+              );
+            }
+          ),
+        )
       ),
 
       floatingActionButton: FloatingActionButton(  
