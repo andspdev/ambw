@@ -15,7 +15,7 @@ class Notes
   final String createdAt;
 
   @HiveField(3)
-  final DateTime updatedAt;
+  final String updatedAt;
 
   Notes({
     required this.judul,

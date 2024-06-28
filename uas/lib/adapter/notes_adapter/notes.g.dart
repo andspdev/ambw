@@ -20,7 +20,7 @@ class NotesAdapter extends TypeAdapter<Notes> {
       judul: fields[0] as String,
       deskripsi: fields[1] as String,
       createdAt: fields[2] as String,
-      updatedAt: fields[3] as DateTime,
+      updatedAt: fields[3] as String,
     );
   }
 

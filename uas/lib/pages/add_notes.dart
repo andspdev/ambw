@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:uas/adapter/notes_adapter/notes.dart';
 import 'package:uas/constant/styles.dart';
 import 'package:uas/constant/colors.dart';
+import 'package:uas/includes/functions.dart';
+import 'package:uas/model/notes_model.dart';
+import 'package:uas/pages/home_screen.dart';
 
 class AddNotes extends StatefulWidget 
 {
@@ -13,11 +18,43 @@ class AddNotes extends StatefulWidget
 
 class _AddNotes extends State<AddNotes>
 {
+  final judulController = TextEditingController();
+  final deskripsiController = TextEditingController();
+  late Box<Notes> notesBox;
+
   @override
   Widget build(BuildContext context)
   {
     DateTime now = DateTime.now();
     String formattedDateTime = DateFormat('d MMMM yyyy HH:mm').format(now);
+
+
+    Future<void> tambahNote(BuildContext context) async
+    {
+      notesBox = await openNotesModel();
+      String valJudul = judulController.value.text;
+      String valDeskripsi = deskripsiController.value.text;
+
+      if (valDeskripsi.isEmpty)
+      {
+        snackbarMessage(context, 'Deskripsi catatan masih kosong.');
+      }
+      else
+      {
+        Notes notesAdd = Notes(
+          judul: valJudul, 
+          deskripsi: valDeskripsi, 
+          createdAt: formattedDateTime, 
+          updatedAt: formattedDateTime
+        );
+
+        addNotesModel(notesBox, notesAdd);
+
+        snackbarMessage(context, 'Berhasil menambahkan catatan Anda.');
+      }
+
+      notesBox.close();
+    }
 
 
     return Scaffold(
@@ -103,6 +140,7 @@ class _AddNotes extends State<AddNotes>
                 ),
               ),
               cursorColor: primaryColor,
+              controller: judulController,
             ),
 
             const SizedBox(height: 10),
@@ -163,6 +201,7 @@ class _AddNotes extends State<AddNotes>
                 ),
                 maxLines: null,
                 cursorColor: primaryColor,
+                controller: deskripsiController,
               )
             ),
 
@@ -174,13 +213,7 @@ class _AddNotes extends State<AddNotes>
 
 
       floatingActionButton: FloatingActionButton(  
-        onPressed: () 
-        {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddNotes())
-          );
-        },
+        onPressed: () => tambahNote(context),
         backgroundColor: primaryColor,
         tooltip: "Simpan Catatan",
         child: const Icon(
