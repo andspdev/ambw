@@ -237,7 +237,7 @@ class _HomeScreen extends State<HomeScreen>
           ),
           const SizedBox(height: 10),
           const Text(
-            'Tidak ada notes yang ditambahkan.',
+            'Tidak ada catatan yang ditambahkan.',
             style: TextStyle(
               fontSize: 16,
               color:  textBlackNotesNotFound
