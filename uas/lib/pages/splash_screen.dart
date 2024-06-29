@@ -39,8 +39,6 @@ class _SplashScreen extends State<SplashScreen>
       Timer(const Duration(seconds: 2), () => 
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => materialPageRoute)
       ));
-
-      pinSaved.close();
     });
   }
 

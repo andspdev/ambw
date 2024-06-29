@@ -54,8 +54,6 @@ class _PinSetting extends State<PinSetting>
       isShowFormPinBaru = (checkPinSaved == null);
       isLoadinghive = false;
     });
-
-    pinSaved.close();
   }
 
   Future<void> saveSubmitPin(BuildContext context) async
@@ -100,8 +98,6 @@ class _PinSetting extends State<PinSetting>
       pinBaruController.clear();
       konfirmasiPinBaruController.clear();
     }
-
-    pinSaved.close();
   }
 
 
@@ -139,7 +135,6 @@ class _PinSetting extends State<PinSetting>
               {
                 pinSaved = await openPinModel();
                 deletePinModel(pinSaved);
-                pinSaved.close();
 
                 setState(() { isShowFormPinBaru = true; });
                 Navigator.of(context).pop();

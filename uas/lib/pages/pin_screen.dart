@@ -121,8 +121,6 @@ class _PinScreen extends State<PinScreen>
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       }
-
-      pinSaved.close();
     }
   }
 
