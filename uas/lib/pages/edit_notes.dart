@@ -6,6 +6,7 @@ import 'package:uas/constant/styles.dart';
 import 'package:uas/constant/colors.dart';
 import 'package:uas/includes/functions.dart';
 import 'package:uas/model/notes_model.dart';
+import 'package:uas/pages/home_screen.dart';
 
 class EditNotes extends StatefulWidget 
 {
@@ -31,6 +32,49 @@ class _EditNotes extends State<EditNotes>
     deskripsiController = TextEditingController(text: widget.note.deskripsi);
   }
   
+  Future<void> hapusCatatan(BuildContext context, Notes note) async 
+  {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) 
+      {
+        return AlertDialog(
+          title: const Text('Hapus catatan Anda'),
+          backgroundColor: backgroundColor,
+          surfaceTintColor: backgroundColor,
+          content: const Text('Apakah Anda ingin menghapus catatan Anda?'),
+          actions: <Widget>[
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(primaryColor), 
+                surfaceTintColor: MaterialStateProperty.all<Color>(backgroundColor),
+                backgroundColor: MaterialStateProperty.all<Color>(backgroundColor)
+              ),
+              child: const Text('Tidak'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(primaryColor),
+                surfaceTintColor: MaterialStateProperty.all<Color>(backgroundColor),
+                backgroundColor: MaterialStateProperty.all<Color>(backgroundColor)
+              ),
+              child: const Text('Ya'),
+              onPressed: () async 
+              {
+                note.delete();
+
+                Navigator.pop(context);
+                snackbarMessage(context, 'Berhasil menghapus catatan Anda');
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
 
   @override
   Widget build(BuildContext context)
@@ -99,6 +143,24 @@ class _EditNotes extends State<EditNotes>
             color: textBlack
           )),
           elevation: 0,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 9, top: 2),
+              child: IconButton(
+                onPressed: () => {}, 
+                icon: const Icon(Icons.visibility_outlined, color: textBlackAppBar),
+                tooltip: "Mode Baca",
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 9, top: 2),
+              child: IconButton(
+                onPressed: () => hapusCatatan(context, widget.note), 
+                icon: const Icon(Icons.delete_outline, color: textBlackAppBar),
+                tooltip: "Hapus Catatan",
+              ),
+            )
+          ],
         ),
       ),
     ),
