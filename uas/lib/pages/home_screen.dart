@@ -114,7 +114,7 @@ class _HomeScreen extends State<HomeScreen>
         Container(
           padding: const EdgeInsets.only(bottom: paddingContainer),
           child: ValueListenableBuilder(
-            valueListenable: notesBox!.listenable(),
+            valueListenable: notesBox.listenable(),
             builder: (context, Box box, widget)
             {
               if (box.isEmpty)
