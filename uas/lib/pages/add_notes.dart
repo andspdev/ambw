@@ -6,6 +6,7 @@ import 'package:uas/constant/styles.dart';
 import 'package:uas/constant/colors.dart';
 import 'package:uas/includes/functions.dart';
 import 'package:uas/model/notes_model.dart';
+import 'package:uas/pages/edit_notes.dart';
 import 'package:uas/pages/home_screen.dart';
 
 class AddNotes extends StatefulWidget 
@@ -49,7 +50,11 @@ class _AddNotes extends State<AddNotes>
 
         addNotesModel(notesBox, notesAdd);
         deskripsiController.clear();
+        judulController.clear();
+
         snackbarMessage(context, 'Berhasil menambahkan catatan Anda.');
+
+        Navigator.pop(context);
       }
     }
 
