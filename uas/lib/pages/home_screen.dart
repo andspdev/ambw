@@ -9,6 +9,7 @@ import 'package:uas/constant/colors.dart';
 import 'package:uas/layouts/loader_small_center.dart';
 import 'package:uas/model/notes_model.dart';
 import 'package:uas/pages/add_notes.dart';
+import 'package:uas/pages/edit_notes.dart';
 import 'package:uas/pages/pin_setting.dart';
 
 class HomeScreen extends StatefulWidget 
@@ -39,6 +40,13 @@ class _HomeScreen extends State<HomeScreen>
       isLoadDataHive = false;
     });
     // notesBox.clear();
+  }
+
+  void onHandleClickEdit(Notes note)
+  {
+    Navigator.push(context, 
+      MaterialPageRoute(builder: (context) => EditNotes(note: note))
+    );
   }
 
   @override
@@ -113,10 +121,7 @@ class _HomeScreen extends State<HomeScreen>
               {
                 return notesNotFound();
               }
-
-              final notes = box.values.toList().cast<Notes>();
-              notes.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-
+              
               return ListView.builder(
                 itemCount: box.length,
                 itemBuilder: ((context, index) 
@@ -184,7 +189,7 @@ class _HomeScreen extends State<HomeScreen>
                                 IconButton(
                                   icon: const Icon(Icons.arrow_circle_right_outlined),
                                   color: textBlackAppBar,
-                                  onPressed: () => {}
+                                  onPressed: () => onHandleClickEdit(note)
                                 ),
                               ],
                             )

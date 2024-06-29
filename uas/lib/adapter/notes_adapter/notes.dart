@@ -3,19 +3,19 @@ import 'package:hive/hive.dart';
 part 'notes.g.dart';
 
 @HiveType(typeId: 1)
-class Notes
+class Notes extends HiveObject
 {
   @HiveField(0)
-  final String judul;
+  String judul;
 
   @HiveField(1)
-  final String deskripsi;
+  String deskripsi;
 
   @HiveField(2)
   final DateTime createdAt;
 
   @HiveField(3)
-  final DateTime updatedAt;
+  DateTime updatedAt;
 
   Notes({
     required this.judul,
