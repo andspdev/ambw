@@ -33,6 +33,15 @@ class _PinScreen extends State<PinScreen>
   bool isEnabledPin3 = false;
   bool isEnabledPin4 = false;
 
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) 
+    {
+      FocusScope.of(context).requestFocus(_focusNode1);
+    });
+  }
 
   @override
   void dispose()
@@ -79,6 +88,14 @@ class _PinScreen extends State<PinScreen>
         isEnabledPin4 = true;
       });
     }
+
+    if (value.length == 1)
+    {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        FocusScope.of(context).requestFocus(nextNode);
+      });
+    }
+    
   }
 
   Future<void> _onLastChanged(BuildContext context, value) async 
